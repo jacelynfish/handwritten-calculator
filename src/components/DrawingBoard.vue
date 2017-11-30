@@ -52,6 +52,8 @@ export default {
 
               if(this.prev.x == x && this.prev.y == y){
                   return;
+              } else {
+                  this.prev = { x, y };
               }
               ctx.lineTo(x, y);
               ctx.lineWidth = 5;
