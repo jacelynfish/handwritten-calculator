@@ -68,9 +68,24 @@ export default {
           this.isDrawing = false;
           this.timeout = setTimeout(() => {
               this.ctx.clearRect(0,0, this.width, this.height);
-              this.strokesToScg(this.matrix)
+              this.request();
               this.matrix = [];
           }, 3000)
+      },
+      request() {
+          var opt = {
+              method: 'POST',
+              mode: 'cors',
+              body: {
+                  strokes: JSON.stringify(this.matrix)
+              },
+              cache: 'default',
+          };
+          fetch('/get_expr', myInit).then(res => {
+              return res.json();
+          }).then(json => {
+              console.log(json)
+          })
       },
       strokesToScg(strokes) {
           var scg = 'SCG_INK\n' + strokes.length + '\n'
