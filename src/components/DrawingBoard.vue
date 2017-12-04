@@ -1,14 +1,21 @@
 <template>
-    <canvas id="canvas" :width="width" :height="height" ref="canvas"
-        @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
-    ></canvas>
+    <div class="">
+        <canvas id="canvas" :width="width" :height="height" ref="canvas"
+            @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
+        ></canvas>
+        <ul>
+            <li v-for="item of record">{{item}}</li>
+        </ul>
+    </div>
 </template>
 
 <script>
+import { mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'HelloWorld',
   data () {
     return {
+        result: '',
       canvas: null,
       offset: {
           top: 0,
@@ -24,6 +31,12 @@ export default {
       }
     }
   },
+  computed: {
+      ...mapGetters({
+          record: 'getRecord',
+          curExp: 'getCurrentExp'
+      })
+  },
   props: [
       'height',
       'width',
@@ -36,6 +49,11 @@ export default {
       this.ctx = this.canvas.getContext('2d');
   },
   methods:{
+      ...mapMutations([
+          'addRecord',
+          'delRecord',
+          'setCurrentExp'
+      ]),
       handleMouseDown(e) {
           this.isDrawing = true;
           clearTimeout(this.timeout);
@@ -67,24 +85,31 @@ export default {
       handleMouseUp(e) {
           this.isDrawing = false;
           this.timeout = setTimeout(() => {
-              this.ctx.clearRect(0,0, this.width, this.height);
-              this.request();
-              this.matrix = [];
-          }, 3000)
+
+              this.request().then(() => {
+                  this.matrix = [];
+                  this.ctx.clearRect(0,0, this.width, this.height);
+              });
+          }, 1000)
       },
       request() {
+          let headers = new Headers();
+          headers.append('Content-Type', 'application/json');
           var opt = {
               method: 'POST',
               mode: 'cors',
-              body: {
-                  strokes: JSON.stringify(this.matrix)
-              },
+              body: JSON.stringify({
+                  strokes: this.matrix
+              }),
+              headers,
               cache: 'default',
           };
-          fetch('/get_expr', myInit).then(res => {
+          return fetch('/get_expr', opt).then(res => {
               return res.json();
           }).then(json => {
-              console.log(json)
+              this.setCurrentExp(json.data);
+              this.addRecord(json.data);
+              console.log(this.curExp)
           })
       },
       strokesToScg(strokes) {
