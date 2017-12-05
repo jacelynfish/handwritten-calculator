@@ -109,7 +109,6 @@ export default {
           }).then(json => {
               this.setCurrentExp(json.data);
               this.addRecord(json.data);
-              console.log(this.curExp)
           })
       }
   }

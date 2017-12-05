@@ -25,6 +25,9 @@ const store = new Vuex.Store({
         setCurrentExp(state, exp) {
             state.currentExp = exp.split(' ')
         },
+        modifyExp(state, { idx, newOp }) {
+            if(newOp && newOp.length) state.currentExp.splice(idx, 1, newOp)
+        },
         addOperand(state, ope) {
             state.currentExp.push(ope)
         }

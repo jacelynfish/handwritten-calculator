@@ -31,10 +31,20 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
-      },
+          test: /\.vue$/,
+          use: [
+            {
+                loader: 'vue-loader',
+                options: vueLoaderConfig
+            },
+            {
+                loader: 'iview-loader',
+                options: {
+                    prefix: false
+                }
+            }
+        ]
+    },
       {
         test: /\.js$/,
         loader: 'babel-loader',

@@ -2,12 +2,12 @@
     <div id="expression-row-wrapper" ref="exp-wrapper">
         <span v-for="(operand, key) in curExp"
              v-html="output[key]" class="exp-operand"
-             @click="modifyOperand(operand)"></span>
+             @click="modifyOperand(key)"></span>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
     data: function() {
         return {
@@ -32,8 +32,16 @@ export default {
         }
     },
     methods: {
-        modifyOperand(operand) {
-            console.log(operand)
+        ...mapMutations([
+            'modifyExp'
+        ]),
+        modifyOperand(idx) {
+            let result = window.prompt("your result")
+            // console.log(operand)
+            this.modifyExp({
+                idx,
+                newOp: result
+            })
         }
     }
 }
