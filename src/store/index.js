@@ -18,18 +18,15 @@ const store = new Vuex.Store({
     mutations: {
         addRecord(state, newRec) {
             state.record.push(newRec)
-            // MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         },
         delRecord(state, idx) {
             state.record.splice(idx, 1);
         },
         setCurrentExp(state, exp) {
-            state.currentExp = exp.split(' ');
-            // MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+            state.currentExp = exp.split(' ')
         },
         addOperand(state, ope) {
             state.currentExp.push(ope)
-            // MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         }
     }
 })

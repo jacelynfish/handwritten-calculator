@@ -111,16 +111,6 @@ export default {
               this.addRecord(json.data);
               console.log(this.curExp)
           })
-      },
-      strokesToScg(strokes) {
-          var scg = 'SCG_INK\n' + strokes.length + '\n'
-          strokes.forEach(function (stroke) {
-              scg += stroke.length + '\n'
-              stroke.forEach(function (p) {
-                  scg += p[0] + ' ' + p[1] + '\n'
-              })
-          })
-          return scg
       }
   }
 }
