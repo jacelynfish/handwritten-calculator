@@ -4,12 +4,41 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
+        strokeColorIdx: 0,
+        strokeColorList: [
+            {
+                name: 'Blue',
+                color: '#2D8CF0'
+            },
+            {
+                name: 'Green',
+                color: '#19BE6B'
+            },
+            {
+                name: 'Orange',
+                color: '#FF9900'
+            },
+            {
+                name: 'Red',
+                color: '#ED3F14'
+            },
+            {
+                name: 'Grey',
+                color: '#495060'
+            }
+        ],
         operandIdx: 0,
         isExpand: false,
         record: [],
         currentExp: []
     },
     getters: {
+        getStrokeColor(state) {
+            return state.strokeColorList[state.strokeColorIdx]
+        },
+        getStrokeColorList(state) {
+            return state.strokeColorList
+        },
         getRecord(state) {
             return state.record
         },
@@ -21,6 +50,9 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
+        changeStrokeColor(state, idx) {
+            state.strokeColorIdx = idx
+        },
         toggleExpand(state) {
             state.isExpand = !state.isExpand
         },

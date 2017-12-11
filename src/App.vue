@@ -2,7 +2,7 @@
   <div id="app">
       <div :class="['calculator', isExpand ? 'calculator--expand':'']">
           <expression-row></expression-row>
-          <drawing-board :width="canvas.maxWidth" :height="canvas.maxHeigth" stroke-color="#FF0000" ></drawing-board>
+          <drawing-board :width="canvas.maxWidth" :height="canvas.maxHeigth" :stroke-color="strokeColor.color" ></drawing-board>
       </div>
 
       <history></history>
@@ -45,7 +45,8 @@ export default {
   computed: {
       ...mapGetters({
           isExpand: 'getExpand',
-          curExp: 'getCurrentExp'
+          curExp: 'getCurrentExp',
+          strokeColor: 'getStrokeColor'
       })
   },
   methods: {

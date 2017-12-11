@@ -1,12 +1,15 @@
 <template>
     <div class="">
+        <palette></palette>
         <canvas id="canvas" :width="width" :height="height" ref="canvas"
             @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
         ></canvas>
+
     </div>
 </template>
 
 <script>
+import Palette from './CanvasPalette'
 import { mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'HelloWorld',
@@ -27,6 +30,9 @@ export default {
           y: -1
       }
     }
+  },
+  components: {
+      Palette,
   },
   computed: {
       ...mapGetters({
