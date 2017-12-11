@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
+        isExpand: false,
         record: [],
         currentExp: []
     },
@@ -13,23 +14,47 @@ const store = new Vuex.Store({
         },
         getCurrentExp(state) {
             return state.currentExp
+        },
+        getExpand(state) {
+            return state.isExpand
         }
     },
     mutations: {
+        toggleExpand(state) {
+            state.isExpand = !state.isExpand
+        },
         addRecord(state, newRec) {
-            state.record.push(newRec)
+            if(Array.isArray(newRec)) state.record.push(...newRec)
+            else state.record.push(newRec)
         },
         delRecord(state, idx) {
             state.record.splice(idx, 1);
         },
+        delAllRecord(state, checked) {
+            let idx = checked[0];
+            let newRec = []
+            for(let i = 0; i < state.record.length; i++) {
+                if(i == idx) idx++;
+                else newRec.push(state.record[i])
+            }
+            state.record = newRec
+        },
         setCurrentExp(state, exp) {
-            state.currentExp = exp.split(' ')
+            state.currentExp = Array.isArray(exp) ? exp : exp.split(' ')
         },
         modifyExp(state, { idx, newOp }) {
-            if(newOp && newOp.length) state.currentExp.splice(idx, 1, newOp)
+            state.currentExp.splice(idx, 1, newOp)
         },
         addOperand(state, ope) {
             state.currentExp.push(ope)
+        },
+    },
+    actions: {
+        modifyExpression({ state, commit }, { idx, newOp }) {
+            if(newOp && newOp.length) {
+                commit('modifyExp', { idx, newOp });
+                commit('addRecord', state.currentExp.join(' '));
+            }
         }
     }
 })

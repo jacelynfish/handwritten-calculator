@@ -3,9 +3,6 @@
         <canvas id="canvas" :width="width" :height="height" ref="canvas"
             @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
         ></canvas>
-        <ul>
-            <li v-for="item of record">{{item}}</li>
-        </ul>
     </div>
 </template>
 

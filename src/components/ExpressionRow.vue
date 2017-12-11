@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
     data: function() {
         return {
@@ -32,13 +32,13 @@ export default {
         }
     },
     methods: {
-        ...mapMutations([
-            'modifyExp'
+        ...mapActions([
+            'modifyExpression'
         ]),
         modifyOperand(idx) {
             let result = window.prompt("your result")
             // console.log(operand)
-            this.modifyExp({
+            this.modifyExpression({
                 idx,
                 newOp: result
             })
@@ -49,7 +49,7 @@ export default {
 
 <style lang="css">
 #expression-row-wrapper{
-    width: 100vw;
+    width: 100%;
     height: 4em;
     font-size: 3em;
     color: white;
