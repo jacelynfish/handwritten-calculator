@@ -1,8 +1,22 @@
 <template lang="html">
     <div id="expression-row-wrapper" ref="exp-wrapper">
-        <span v-for="(operand, key) in curExp"
-             v-html="output[key]" class="exp-operand"
-             @click="modifyOperand(key)"></span>
+        <Modal v-model="isShowEdit"
+                title="Modify Operand"
+                ok-text="Confirm"
+                cancel-text="Cancel"
+                @on-ok="modifyExpression({
+                    idx: editIdx,
+                    newOp: editText
+                })">
+            Please enter your new operand:
+            <Input v-model="editText"></Input>
+        </Modal>
+        <div id="expression">
+            <span class="expression__operand"
+                v-for="(operand, key) in curExp"
+                 v-html="output[key]"
+                 @click="modifyOperand(operand, key)"></span>
+        </div>
     </div>
 </template>
 
@@ -11,7 +25,10 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
     data: function() {
         return {
-            output: []
+            output: [],
+            isShowEdit: false,
+            editText: '',
+            editIdx: -1
         }
     },
     computed: {
@@ -35,27 +52,31 @@ export default {
         ...mapActions([
             'modifyExpression'
         ]),
-        modifyOperand(idx) {
-            let result = window.prompt("your result")
-            // console.log(operand)
-            this.modifyExpression({
-                idx,
-                newOp: result
-            })
+        modifyOperand(operand, idx) {
+            this.editIdx = idx;
+            this.editText = operand;
+            this.isShowEdit = true;
         }
     }
 }
 </script>
 
 <style lang="css">
-#expression-row-wrapper{
+#expression{
+    padding: 0 24px;
+    box-sizing: border-box;
     width: 100%;
-    height: 4em;
-    font-size: 3em;
+    text-align: right;
+    height: 3em;
+    line-height: 3em;
+    font-size: 4rem;
     color: white;
     background-color: black;
 }
-.exp-operand:hover{
+.expression__operand{
+
+}
+.expression__operand:hover{
     background-color: white;
     color:black;
 }

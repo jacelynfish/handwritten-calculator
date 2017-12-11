@@ -202,6 +202,7 @@ export default {
     transition: display 0.5s;
 }
 .history__title{
+    color: @mainColor;
     font-size: 2.4em;
     margin-bottom: 1rem;
 }

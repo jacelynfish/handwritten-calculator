@@ -2,7 +2,7 @@
   <div id="app">
       <div :class="['calculator', isExpand ? 'calculator--expand':'']">
           <expression-row></expression-row>
-          <drawing-board width="800" height="500" stroke-color="#FF0000" ></drawing-board>
+          <drawing-board :width="canvas.maxWidth" :height="canvas.maxHeigth" stroke-color="#FF0000" ></drawing-board>
       </div>
 
       <history></history>
@@ -18,6 +18,18 @@ import History from '@components/History'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'app',
+  data: function() {
+      return {
+          canvas: {
+              maxHeigth: 0,
+              maxWidth: 0
+          }
+      }
+  },
+  mounted() {
+      this.canvas.maxHeigth = document.body.clientHeight;
+      this.canvas.maxWidth = document.body.clientWidth;
+  },
   components:{
       DrawingBoard,
       ExpressionRow,
@@ -35,6 +47,9 @@ export default {
 #app{
     display: flex;
     flex-direction: row;
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: hidden;
 }
 .calculator{
     width: 70vw;

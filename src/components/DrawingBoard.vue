@@ -115,5 +115,6 @@ export default {
 <style scoped>
 canvas{
     background-color: transparent;
+    background: url('~@/assets/canvas-background.png') repeat;
 }
 </style>
