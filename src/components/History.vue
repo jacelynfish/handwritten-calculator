@@ -23,6 +23,7 @@
                             icon="ios-cloud-download-outline"
                             type="text"
                             size="small"
+                            :disabled="!record.length"
                             @click="exportExp">
                         Export
                     </Button>
@@ -30,6 +31,7 @@
                             icon="ios-trash-outline"
                             type="text"
                             size="small"
+                            :disabled="!checkAllGroup.length"
                             @click="delRecords">
                         Delete
                     </Button>
@@ -106,13 +108,18 @@ export default {
             }
         },
         applyExp(item) {
-            this.setCurrentExp(item)
+            let idx = item.indexOf('=');
+            this.setCurrentExp(idx >= 0 ? item.slice(0, idx) : item)
         },
         exportExp() {
             let data = [];
-            for(let idx of this.checkAllGroup) {
-                data.push(this.record[idx])
+            if(!this.checkAllGroup.length) data = this.record
+            else {
+                for(let idx of this.checkAllGroup) {
+                    data.push(this.record[idx])
+                }
             }
+
             let a = document.createElement('a')
             let url = URL.createObjectURL(new Blob([data.join('\n')], { type: "text/plain"}))
             a.classList.add('download-util')

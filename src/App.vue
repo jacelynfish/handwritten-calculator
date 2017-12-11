@@ -11,6 +11,7 @@
 </template>
 
 <script>
+
 import ExpressionRow from '@components/ExpressionRow'
 import DrawingBoard from '@components/DrawingBoard'
 import History from '@components/History'
@@ -23,12 +24,18 @@ export default {
           canvas: {
               maxHeigth: 0,
               maxWidth: 0
-          }
+          },
+          body: null
       }
   },
   mounted() {
+      this.body = document.getElementsByTagName('body')[0]
       this.canvas.maxHeigth = document.body.clientHeight;
       this.canvas.maxWidth = document.body.clientWidth;
+
+      document.addEventListener('keyup', this.handleKeyDown)
+      document.addEventListener('keydown', this.suppressBackspace)
+      document.addEventListener('keypress', this.suppressBackspace)
   },
   components:{
       DrawingBoard,
@@ -37,9 +44,57 @@ export default {
   },
   computed: {
       ...mapGetters({
-          isExpand: 'getExpand'
+          isExpand: 'getExpand',
+          curExp: 'getCurrentExp'
       })
   },
+  methods: {
+      ...mapMutations([
+          'addOperand',
+          'addRecord',
+          'delOperand',
+          'setCurrentExp'
+      ]),
+      suppressBackspace(e) {
+          if(e.key == 'Backspace' && e.target == this.body) {
+              e.preventDefault();
+              return false;
+          }
+      },
+      handleKeyDown(e) {
+          if(e.target == this.body) {
+              e.preventDefault()
+              e.stopPropagation()
+              switch(e.key) {
+                  case 'Enter': this.getCompleteRecord(); return;
+                  case 'Backspace': this.delOperand(this.curExp.length - 1); return;
+                  default: this.addOperand(e.key)
+              }
+          }
+          return false
+      },
+      getCompleteRecord() {
+          let res;
+          if(this.curExp.length) {
+              try {
+                  res = eval(this.curExp.join(''));
+              }
+              catch(e) {
+                  this.addRecord(this.curExp.join(' '))
+                  this.$Modal.error({
+                      title: 'Calculation Failed',
+                      content: 'Invalid expression. Please check again whether the expression is correct',
+                      okText: 'Confirm',
+                      cancelText: 'Cancel'
+                  })
+              }
+              if(res) {
+                  this.addRecord(this.curExp.join(' ').concat(` = ${res}`));
+                  this.setCurrentExp(res.toString());
+              }
+          }
+      },
+  }
 }
 </script>
 

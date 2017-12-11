@@ -41,7 +41,8 @@ export default {
         curExp(val) {
             this.output = [];
             for(let key of Object.keys(val)) {
-                this.output[key] = `\\(${val[key]}\\)`
+                if(/[\\{]/.test(val[key])) this.output[key] = `\\(${val[key]}\\)`
+                else this.output[key] = val[key]
             }
             this.$nextTick(function() {
                 MathJax.Hub.Queue(["Typeset",MathJax.Hub,"expression-row-wrappe"])
@@ -52,6 +53,7 @@ export default {
         ...mapActions([
             'modifyExpression'
         ]),
+
         modifyOperand(operand, idx) {
             this.editIdx = idx;
             this.editText = operand;

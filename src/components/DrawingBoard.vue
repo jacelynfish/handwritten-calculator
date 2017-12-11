@@ -105,7 +105,7 @@ export default {
               return res.json();
           }).then(json => {
               this.setCurrentExp(json.data);
-              this.addRecord(json.data);
+              // this.addRecord(json.data);
           })
       }
   }
