@@ -4,14 +4,13 @@
           <expression-row></expression-row>
           <drawing-board :width="canvas.maxWidth" :height="canvas.maxHeigth" :stroke-color="strokeColor.color" ></drawing-board>
       </div>
-
       <history></history>
+      <Spin fix v-if="isCalculating"></Spin>
     <!-- <router-view/> -->
   </div>
 </template>
 
 <script>
-
 import ExpressionRow from '@components/ExpressionRow'
 import DrawingBoard from '@components/DrawingBoard'
 import History from '@components/History'
@@ -25,6 +24,7 @@ export default {
               maxHeigth: 0,
               maxWidth: 0
           },
+          isCalculating: false,
           body: null
       }
   },
@@ -74,11 +74,31 @@ export default {
           }
           return false
       },
-      getCompleteRecord() {
+      async getCompleteRecord() {
           let res;
           if(this.curExp.length) {
+              this.isCalculating = true;
               try {
-                  res = eval(this.curExp.join(''));
+                let exp = this.curExp.join('')
+                if(/[\\{]/.test(exp)) {
+                  exp = encodeURIComponent(exp)
+                  await fetch(`/eval_expr?exp=${exp}`).then(res => {
+                      return res.json()
+                  }).then(json =>{
+                    let { exact, decimalApproximation } = json.data;
+                    if(decimalApproximation.length) {
+                      res = parseFloat(decimalApproximation).toFixed(5);
+                    } else if(exact.length) {
+                      res = exact
+                    } else {
+                      throw new Error();
+                    }
+                  })
+                } else {
+                  res = eval(exp);
+                }
+                this.addRecord(this.curExp.join(' ').concat(` = ${res}`));
+                this.setCurrentExp(res.toString());
               }
               catch(e) {
                   this.addRecord(this.curExp.join(' '))
@@ -88,10 +108,8 @@ export default {
                       okText: 'Confirm',
                       cancelText: 'Cancel'
                   })
-              }
-              if(res) {
-                  this.addRecord(this.curExp.join(' ').concat(` = ${res}`));
-                  this.setCurrentExp(res.toString());
+              } finally {
+                this.isCalculating = false;
               }
           }
       },
@@ -101,6 +119,7 @@ export default {
 
 <style lang='less'>
 #app{
+    display: relative;
     display: flex;
     flex-direction: row;
     max-width: 100vw;
