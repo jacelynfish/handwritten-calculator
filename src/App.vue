@@ -46,7 +46,8 @@ export default {
       ...mapGetters({
           isExpand: 'getExpand',
           curExp: 'getCurrentExp',
-          strokeColor: 'getStrokeColor'
+          strokeColor: 'getStrokeColor',
+          curIndex: 'getCurrentIndex'
       })
   },
   methods: {
@@ -95,7 +96,16 @@ export default {
                     }
                   })
                 } else {
-                  res = eval(exp);
+                  let operands = this.curExp.map((ope) => {
+                    let r1 = /^([0-9]{1}|([1-9][0-9]+))\.[0-9]+$/.exec(ope),
+                        r2 = /^([0-9]{1}|([1-9][0-9]+))$/.exec(ope)
+                    if(r1 != null)
+                      return parseFloat(ope, this.curIndex);
+                    else if(r2 != null)
+                      return parseInt(ope, this.curIndex)
+                    else return ope
+                  })
+                  res = eval(operands.join(''));
                 }
                 this.addRecord(this.curExp.join(' ').concat(` = ${res}`));
                 this.setCurrentExp(res.toString());

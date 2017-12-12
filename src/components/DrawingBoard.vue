@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <palette></palette>
+        <tools></tools>
         <canvas id="canvas" :width="width" :height="height" ref="canvas"
             @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
         ></canvas>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Palette from './CanvasPalette'
+import Tools from './CanvasTools'
 import { mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'HelloWorld',
@@ -32,7 +32,7 @@ export default {
     }
   },
   components: {
-      Palette,
+      Tools,
   },
   computed: {
       ...mapGetters({
@@ -50,6 +50,9 @@ export default {
       this.offset.top = this.canvas.offsetTop;
       this.offset.left = this.canvas.offsetLeft;
       this.ctx = this.canvas.getContext('2d');
+
+      this.eventHub.$on('recognize-canvas', this.recognize)
+      this.eventHub.$on('clear-canvas', this.clearCanvas)
   },
   methods:{
       ...mapMutations([
@@ -57,9 +60,21 @@ export default {
           'delRecord',
           'setCurrentExp'
       ]),
+      clearCanvas() {
+        this.matrix = [];
+        this.ctx.clearRect(0,0, this.width, this.height);
+      },
+      recognize() {
+        if(this.matrix.length) {
+          this.request().then(json => {
+            this.setCurrentExp(json.data);
+            // this.addRecord(json.data);
+          });
+        }
+      },
       handleMouseDown(e) {
           this.isDrawing = true;
-          clearTimeout(this.timeout);
+          // clearTimeout(this.timeout);
           this.ctx.beginPath();
           this.ctx.moveTo(e.pageX - this.offset.left, e.pageY - this.offset.top);
           this.matrix.push([]);
@@ -87,13 +102,6 @@ export default {
       },
       handleMouseUp(e) {
           this.isDrawing = false;
-          this.timeout = setTimeout(() => {
-
-              this.request().then(() => {
-                  this.matrix = [];
-                  this.ctx.clearRect(0,0, this.width, this.height);
-              });
-          }, 1000)
       },
       request() {
           let headers = new Headers();
@@ -109,9 +117,6 @@ export default {
           };
           return fetch('/get_expr', opt).then(res => {
               return res.json();
-          }).then(json => {
-              this.setCurrentExp(json.data);
-              // this.addRecord(json.data);
           })
       }
   }

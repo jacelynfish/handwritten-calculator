@@ -9,17 +9,18 @@ import 'iview/dist/styles/iview.css';
 
 Vue.config.productionTip = false
 Vue.use(iView);
+var eventHub = new Vue();
+Vue.mixin({
+  data: function() {
+    return {
+      eventHub
+    }
+  }
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   store,
-  mixin: {
-    data: function () {
-        return {
-            eventHub: new Vue()
-        }
-    }
-  },
   // router,
   template: '<App/>',
   components: { App }

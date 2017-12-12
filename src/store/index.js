@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
+        currentIndex: 10,
         strokeColorIdx: 0,
         strokeColorList: [
             {
@@ -33,6 +34,9 @@ const store = new Vuex.Store({
         currentExp: []
     },
     getters: {
+        getCurrentIndex(state) {
+          return state.currentIndex
+        },
         getStrokeColor(state) {
             return state.strokeColorList[state.strokeColorIdx]
         },
@@ -50,6 +54,10 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
+        toggleCurrentIndex(state) {
+            let oldIdx = state.currentIndex
+            state.currentIndex = oldIdx == 10 ? 2 : 10
+        },
         changeStrokeColor(state, idx) {
             state.strokeColorIdx = idx
         },
