@@ -13,6 +13,7 @@
             {{util.content}}
       </span>
     </Tooltip>
+    <palette></palette>
   </div>
 </template>
 
@@ -25,16 +26,18 @@ export default {
     return {
       utilList: [
         {
+          name: 'Color Palette',
+          icon: 'android-color-palette',
+          func: () => {
+            this.eventHub.$emit('palette-toggle')
+          }
+        },
+        {
           name: 'Full Screen',
           icon: 'arrow-expand',
           func: () => {
             this.expandFullScreen()
           }
-        },
-        {
-          name: 'Color Palette',
-          icon: 'android-color-palette',
-          func: () => {}
         },
         {
           name: 'Recognize',
@@ -52,10 +55,20 @@ export default {
         },
         {
           name: 'Decimal-Binary Convert',
-          content: '10',
+          icon: 'shuffle',
           func: () => {
             this.toggleCurrentIndex()
-            this.utilList[4].content = this.curIndex;
+              if(this.curExp.length == 1) {
+                let res, num = Number(this.curExp[0])
+                if(Number.isInteger(num)) {
+                  res = this.curIndex == 10 ?
+                        parseInt(this.curExp[0], 2) : num.toString(2)
+                } else if(Number.isFinite(num)) {
+                  res = this.curIndex == 10 ?
+                        parseFloat(this.curExp[0], 2) : num.toString(2)
+                }
+                this.setCurrentExp([res])
+            }
           }
         },
       ]
@@ -63,16 +76,18 @@ export default {
   },
   computed: {
     ...mapGetters({
-      curIndex: 'getCurrentIndex'
+      curIndex: 'getCurrentIndex',
+      curExp: 'expression/getCurrentExp'
     })
   },
   components: {
     Palette
   },
   methods: {
-    ...mapMutations([
-      'toggleCurrentIndex'
-    ]),
+    ...mapMutations({
+      toggleCurrentIndex: 'toggleCurrentIndex',
+      setCurrentExp: 'expression/setCurrentExp'
+    }),
     expandFullScreen() {
       if(document.body.webkitRequestFullscreen)
         document.body.webkitRequestFullscreen()
@@ -97,7 +112,7 @@ export default {
   border-bottom-right-radius: 20px;
 }
 .canvas__tools-item{
-  font-size: 3.2em;
+  font-size: 3.6em;
   margin: 0 8px;
 
   &:hover {

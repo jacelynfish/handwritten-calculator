@@ -36,8 +36,8 @@ export default {
   },
   computed: {
       ...mapGetters({
-          record: 'getRecord',
-          curExp: 'getCurrentExp'
+          record: 'record/getRecord',
+          curExp: 'expression/getCurrentExp'
       })
   },
   props: [
@@ -55,11 +55,11 @@ export default {
       this.eventHub.$on('clear-canvas', this.clearCanvas)
   },
   methods:{
-      ...mapMutations([
-          'addRecord',
-          'delRecord',
-          'setCurrentExp'
-      ]),
+      ...mapMutations({
+          addRecord: 'record/addRecord',
+          delRecord: 'record/delRecord',
+          setCurrentExp: 'expression/setCurrentExp'
+      }),
       clearCanvas() {
         this.matrix = [];
         this.ctx.clearRect(0,0, this.width, this.height);

@@ -45,17 +45,19 @@ export default {
   computed: {
       ...mapGetters({
           isExpand: 'getExpand',
-          curExp: 'getCurrentExp',
-          strokeColor: 'getStrokeColor',
-          curIndex: 'getCurrentIndex'
+          curExp: 'expression/getCurrentExp',
+          curIndex: 'getCurrentIndex',
+          strokeColor: 'color/getStrokeColor',
       })
   },
   methods: {
-      ...mapMutations([
+      ...mapMutations('expression', [
           'addOperand',
-          'addRecord',
           'delOperand',
           'setCurrentExp'
+      ]),
+      ...mapMutations('record', [
+          'addRecord',
       ]),
       suppressBackspace(e) {
           if(e.key == 'Backspace' && e.target == this.body) {

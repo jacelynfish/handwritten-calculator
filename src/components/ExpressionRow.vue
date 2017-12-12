@@ -33,8 +33,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            record: 'getRecord',
-            curExp: 'getCurrentExp'
+            record: 'record/getRecord',
+            curExp: 'expression/getCurrentExp'
         })
     },
     watch: {
@@ -50,10 +50,9 @@ export default {
         }
     },
     methods: {
-        ...mapActions([
+        ...mapActions('expression',[
             'modifyExpression'
         ]),
-
         modifyOperand(operand, idx) {
             this.editIdx = idx;
             this.editText = operand;

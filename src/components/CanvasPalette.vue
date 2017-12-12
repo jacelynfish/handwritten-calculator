@@ -1,9 +1,10 @@
 <template lang="html">
-    <ul id="canvas__palette">
+    <ul id="canvas__palette"
+        :class="[ isExpand ? 'canvas__palette--expand' : '']">
         <li class="canvas__palette-item"
             v-for="(color, idx) in colorList"
             :data-name="color.name"
-            @click="changeStrokeColor(idx)">
+            @click="selectColor(idx)">
             <span :style="{ color: color.color }"></span>
         </li>
     </ul>
@@ -12,16 +13,34 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 export default {
+    data: function() {
+        return {
+            isExpand: false
+        }
+    },
     computed: {
-        ...mapGetters({
+        ...mapGetters('color', {
             strokeColor: 'getStrokeColor',
             colorList: 'getStrokeColorList'
         })
     },
     methods: {
-        ...mapMutations([
+        ...mapMutations('color', [
             'changeStrokeColor'
         ]),
+        selectColor(idx) {
+          this.changeStrokeColor(idx)
+          this.eventHub.$emit('palette-toggle')
+        },
+        togglePalette() {
+            this.isExpand = !this.isExpand
+        }
+    },
+    mounted() {
+      this.eventHub.$on('palette-toggle', this.togglePalette)
+    },
+    beforeDestroy() {
+      this.eventHub.$off('palette-toggle')
     }
 }
 </script>
@@ -30,11 +49,15 @@ export default {
 #canvas__palette{
     position: absolute;
     margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+#canvas__palette.canvas__palette--expand{
+    opacity: 1;
+    transition: opacity 0.2s;
 }
 .canvas__palette-item{
-
     border-radius: 6px;
-    margin-left: 8px;
     padding: 4px;
     &:hover{
         background-color: rgba(0,0,0,0.1);

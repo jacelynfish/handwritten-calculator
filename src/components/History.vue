@@ -65,17 +65,20 @@ export default {
     },
     computed: {
         ...mapGetters({
-            record: 'getRecord',
-            isExpand: 'getExpand'
+            record: 'record/getRecord',
+            isExpand: 'getExpand',
+            curExp: 'getCurrentExp'
         })
     },
     methods: {
-        ...mapMutations([
-            'setCurrentExp',
+        ...mapMutations({
+          setCurrentExp: 'expression/setCurrentExp',
+          toggleExpand: 'toggleExpand'
+        }),
+        ...mapMutations('record', [
             'addRecord',
             'delRecord',
             'delAllRecord',
-            'toggleExpand'
         ]),
         handleCheckAll() {
             if (this.indeterminate) {
@@ -109,7 +112,7 @@ export default {
         },
         applyExp(item) {
             let idx = item.indexOf('=');
-            this.setCurrentExp(idx >= 0 ? item.slice(0, idx) : item)
+            this.setCurrentExp(idx >= 0 ? item.slice(0, idx).trim() : item)
         },
         exportExp() {
             let data = [];
