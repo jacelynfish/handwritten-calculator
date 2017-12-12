@@ -3,8 +3,7 @@
       <div :class="['calculator', isExpand ? 'calculator--expand':'']">
           <expression-row></expression-row>
           <drawing-board :width="canvas.maxWidth" :height="canvas.maxHeigth" :stroke-color="strokeColor.color" ></drawing-board>
-      </div>
-      <history></history>
+      </div><history></history>
       <Spin fix v-if="isCalculating"></Spin>
     <!-- <router-view/> -->
   </div>
@@ -32,7 +31,6 @@ export default {
       this.body = document.getElementsByTagName('body')[0]
       this.canvas.maxHeigth = document.body.clientHeight;
       this.canvas.maxWidth = document.body.clientWidth;
-
       document.addEventListener('keyup', this.handleKeyDown)
       document.addEventListener('keydown', this.suppressBackspace)
       document.addEventListener('keypress', this.suppressBackspace)
@@ -131,18 +129,19 @@ export default {
 
 <style lang='less'>
 #app{
-    display: relative;
-    display: flex;
-    flex-direction: row;
+    position: relative;
     max-width: 100vw;
-    max-height: 100vh;
+    height: 100vh;
     overflow: hidden;
 }
 .calculator{
-    width: 70vw;
+    width: auto;
+    padding: 0 30vw 0 0;
+    overflow:hidden;
+    transition: padding-right 0.6s;
 }
 .calculator--expand{
-    width: 100vw;
-    transition: width 0.5s;
+    padding-right: 0;
+    transition: padding-right 0.5s;
 }
 </style>

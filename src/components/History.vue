@@ -1,9 +1,9 @@
 <template lang="html">
-    <aside id="history">
+    <aside id="history" :class="[ isExpand ? 'history--close' : '']">
         <div :class="['history__toggle', isExpand ? 'history__toggle--expand' : '']" @click="toggleExpand">
             <span></span>
         </div>
-        <div :class="[ 'history__content', isExpand ? 'history__content--close' : '']">
+        <div class='history__content'>
             <h2 class="history__title">History</h2>
             <div class="history__control">
                 <Checkbox class="history__control-item"
@@ -162,10 +162,19 @@ export default {
 @shadowColor:   rgba(0, 0, 0, 0.2);
 
 #history{
-    position: relative;
+    position: absolute;
+    right:0;
+    top: 0;
+    bottom: 0;
     height: 100vh;
     border-radius: 20px 0 0 20px;
     background-color: @bgColor;
+    transform: translateX(0);
+    transition: transform 0.5s;
+}
+#history.history--close{
+    transform: translateX(100%);
+    transition: all 0.5s;
 }
 .history__toggle{
     position: absolute;
@@ -205,11 +214,6 @@ export default {
     width: 30vw;
     padding: 16px;
     box-sizing: border-box;
-}
-.history__content--close{
-    // width: 0px;
-    display: none;
-    transition: display 0.5s;
 }
 .history__title{
     color: @mainColor;

@@ -66,7 +66,7 @@ export default {
 #expression{
     padding: 0 24px;
     box-sizing: border-box;
-    width: 100%;
+    width: 110%;
     text-align: right;
     height: 3em;
     line-height: 3em;
