@@ -2,7 +2,12 @@
     <div class="">
         <tools></tools>
         <canvas id="canvas" :width="width" :height="height" ref="canvas"
-            @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
+            @mousedown="handleMouseDown"
+            @mousemove="handleMouseMove"
+            @mouseup="handleMouseUp"
+            @touchstart="handleMouseDown"
+            @touchmove="handleMouseMove"
+            @touchend="handleMouseUp"
         ></canvas>
 
     </div>
@@ -15,6 +20,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
+      loading: null,
         result: '',
       canvas: null,
       offset: {
@@ -66,25 +72,49 @@ export default {
       },
       recognize() {
         if(this.matrix.length) {
+          let loading = this.$Message.loading({
+            content: 'Recognizing...',
+            duration: 0
+          })
           this.request().then(json => {
             this.setCurrentExp(json.data);
             // this.addRecord(json.data);
+            loading()
           });
         }
       },
       handleMouseDown(e) {
           this.isDrawing = true;
           // clearTimeout(this.timeout);
+          let x, y
+          if(e.type == 'touchstart') {
+            x = e.changedTouches[0].clientX
+            y = e.changedTouches[0].clientY
+          } else {
+            x = e.pageX
+            y = e.pageY
+          }
+
           this.ctx.beginPath();
-          this.ctx.moveTo(e.pageX - this.offset.left, e.pageY - this.offset.top);
+          this.ctx.moveTo(x - this.offset.left, y - this.offset.top);
           this.matrix.push([]);
       },
       handleMouseMove(e) {
           let ctx = this.ctx;
           let currentStroke = this.matrix.length - 1;
+
+          let X, Y
+          if(e.type == 'touchmove') {
+            X = e.changedTouches[0].clientX
+            Y = e.changedTouches[0].clientY
+          } else {
+            X = e.pageX
+            Y = e.pageY
+          }
+
           if(this.isDrawing) {
-              let x = e.pageX - this.offset.left;
-              let y = e.pageY - this.offset.top;
+              let x = X - this.offset.left;
+              let y = Y - this.offset.top;
 
               if(this.prev.x == x && this.prev.y == y){
                   return;
