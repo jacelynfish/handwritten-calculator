@@ -71,6 +71,20 @@ export default {
             }
           }
         },
+        {
+          name: 'Calculate',
+          icon: 'ios-calculator',
+          func: () => {
+            this.eventHub.$emit('calculate')
+          }
+        },
+        {
+          name: 'Backspace',
+          icon: 'backspace',
+          func: () => {
+            this.delOperand(this.curExp.length - 1)
+          }
+        }
       ]
     }
   },
@@ -86,7 +100,8 @@ export default {
   methods: {
     ...mapMutations({
       toggleCurrentIndex: 'toggleCurrentIndex',
-      setCurrentExp: 'expression/setCurrentExp'
+      setCurrentExp: 'expression/setCurrentExp',
+      delOperand: 'expression/delOperand'
     }),
     expandFullScreen() {
       if(document.body.webkitRequestFullscreen)
@@ -108,7 +123,7 @@ export default {
 #canvas__tools{
   position: absolute;
   background-color: @shadowColor;
-  padding: 8px 12px;
+  padding: 12px 16px;
   border-bottom-right-radius: 20px;
 }
 .canvas__tools-item{

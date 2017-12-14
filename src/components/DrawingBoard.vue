@@ -107,6 +107,7 @@ export default {
           if(e.type == 'touchmove') {
             X = e.changedTouches[0].clientX
             Y = e.changedTouches[0].clientY
+            e.preventDefault()
           } else {
             X = e.pageX
             Y = e.pageY

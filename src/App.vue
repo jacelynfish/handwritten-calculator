@@ -34,6 +34,10 @@ export default {
       document.addEventListener('keyup', this.handleKeyDown)
       document.addEventListener('keydown', this.suppressBackspace)
       document.addEventListener('keypress', this.suppressBackspace)
+      this.eventHub.$on('calculate', this.getCompleteRecord)
+  },
+  beforeDestroy() {
+      this.eventHub.$off('calculate', this.getCompleteRecord)
   },
   components:{
       DrawingBoard,

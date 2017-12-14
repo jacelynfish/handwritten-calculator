@@ -64,7 +64,7 @@ export default {
 
 <style lang="css">
 #expression{
-    padding: 0 11% 0 24px;
+    padding: 0 15% 0 24px;
     box-sizing: border-box;
     width: 110%;
     text-align: right;

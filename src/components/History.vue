@@ -212,6 +212,7 @@ export default {
 }
 .history__content{
     width: 30vw;
+    min-width: 330px;
     padding: 16px;
     box-sizing: border-box;
 }
